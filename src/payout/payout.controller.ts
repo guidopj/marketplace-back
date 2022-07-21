@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Req, Res, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { CreateSoldItemDto } from '../item/dto/item.dto';
 import { PayoutService } from './payout.service';
 import { Payout } from './interface/payout';
@@ -21,5 +21,15 @@ export class PayoutController {
     @Get(':payoutId')
     getPayout(@Param('payoutId') payoutId: string): Promise<Payout> {
         return this.payoutService.getPayout(payoutId);
+    }
+
+    @Delete(':payoutId')
+    deletePayout(@Param('payoutId') payoutId: string): Promise<Payout> {
+        return this.payoutService.deletePayout(payoutId);
+    }
+
+    @Delete()
+    deletePayouts(): Promise<Payout[]> {
+        return this.payoutService.deletePayouts();
     }
 }

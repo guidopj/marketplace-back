@@ -1,6 +1,6 @@
 import { Schema } from "mongoose"
 
-export const Payout = new Schema({
+export const PayoutSchema = new Schema({
     sellerReference: Number,
     amount: Number,
     currency: String

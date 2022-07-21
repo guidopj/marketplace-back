@@ -1,14 +1,8 @@
-import { Document } from "mongoose";
-
-export interface Payout extends Document {
+export interface Payout {
     id?: number;
     sellerReference: Number;
     amount: Number;
     currency: String;
 }
 
-enum CurrencyEnum {
-    Dollars = 'USD',
-    Euros = 'EUR',
-    Pence = 'GBP',
-}
+export const PayoutName = "name";

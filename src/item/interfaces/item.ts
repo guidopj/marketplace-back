@@ -1,13 +1,7 @@
 export interface Item {
     id?: number;
     name: string;
-    priceCurrency: CurrencyEnum;
+    priceCurrency: string;
     priceAmount: number;
     sellerReference: number;
-}
-
-enum CurrencyEnum {
-    Dollars = 'USD',
-    Euros = 'EUR',
-    Pence = 'GBP',
 }
