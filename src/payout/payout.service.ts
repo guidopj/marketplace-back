@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { Payout } from './interface/payout';
+import { Payout, PayoutName } from './interface/payout';
 import { CreateSoldItemDto } from '../item/dto/item.dto';
 import { CreatePayoutDto } from './dto/payout.dto';
 import { AMOUNT_LIMIT } from '../enums/payoutEnums';
@@ -10,7 +10,7 @@ import { AMOUNT_LIMIT } from '../enums/payoutEnums';
 @Injectable()
 export class PayoutService {
 
-    constructor(@InjectModel('Payout') private payoutModel: Model<Payout>){}
+    constructor(@InjectModel(PayoutName) private payoutModel: Model<Payout>){}
 
     async getPayouts(){
         return await this.payoutModel.find();
