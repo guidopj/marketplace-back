@@ -3,9 +3,3 @@ export class CreatePayoutDto {
     amount: number;
     currency: string;
 }
-
-enum CurrencyEnum {
-    Dollars = 'USD',
-    Euros = 'EUR',
-    Pence = 'GBP',
-}
