@@ -8,7 +8,7 @@ import { PayoutService } from './payout.service';
 import { ItemDTOStub } from '../../test/stub/item.dto.stub';
 import { CreateSoldItemDto } from "src/item/dto/item.dto";
 import { Payout, PayoutName } from './interface/payout';
-import { PayoutSchema } from './schema/payout.schema'
+import { PayoutSchema } from './schema/payout.schema';
 
 describe('PayoutController', () => {
   let controller: PayoutController;
