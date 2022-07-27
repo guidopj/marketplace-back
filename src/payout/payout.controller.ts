@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+
 import { CreateSoldItemDto } from '../item/dto/item.dto';
 import { PayoutService } from './payout.service';
 import { Payout } from './interface/payout';
@@ -24,12 +25,12 @@ export class PayoutController {
     }
 
     @Delete(':payoutId')
-    deletePayout(@Param('payoutId') payoutId: string): Promise<Payout> {
+    deletePayout(@Param('payoutId') payoutId: string): Promise<number> {
         return this.payoutService.deletePayout(payoutId);
     }
 
     @Delete()
-    deletePayouts(): Promise<Payout[]> {
+    deletePayouts(): Promise<number> {
         return this.payoutService.deletePayouts();
     }
 }

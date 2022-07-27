@@ -1,31 +1,36 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Injectable, Inject } from '@nestjs/common';
 
-import { Payout, PayoutName } from './interface/payout';
 import { CreateSoldItemDto } from '../item/dto/item.dto';
 import { CreatePayoutDto } from './dto/payout.dto';
 import { AMOUNT_LIMIT } from '../enums/payoutEnums';
+import { PAYOUT_REPOSITORY } from 'src/enums/payoutEnums';
+import { Payout } from 'src/entities/payout.entity';
 
 @Injectable()
 export class PayoutService {
 
-    constructor(@InjectModel(PayoutName) private payoutModel: Model<Payout>){}
+    constructor(@Inject(PAYOUT_REPOSITORY) private payoutModel: typeof Payout){}
 
     async getPayouts(){
-        return await this.payoutModel.find();
+        return await this.payoutModel.findAll();
     }
 
     async getPayout(id: string){
-        return await this.payoutModel.findById(id);
+        return await this.payoutModel.findByPk(id);
     }
 
     async deletePayout(id: string){
-        return await this.payoutModel.findByIdAndRemove(id);
+        return await this.payoutModel.destroy({
+            where: {
+              id
+            }
+        })
     }
 
     async deletePayouts(){
-        return await this.payoutModel.remove({});
+        return await this.payoutModel.destroy({
+            truncate: true
+          });
     }
 
     async savePayout(item: CreateSoldItemDto, currentAmount: number){

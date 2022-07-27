@@ -1,1 +1,2 @@
 export const AMOUNT_LIMIT = 1000000;
+export const PAYOUT_REPOSITORY = 'PAYOUT_REPOSITORY';

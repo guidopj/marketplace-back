@@ -1,16 +1,17 @@
 import { Module } from '@nestjs/common';
+
 import { PayoutService } from './payout.service';
 import { PayoutController } from './payout.controller';
-import { PayoutSchema } from './schema/payout.schema'
-import { MongooseModule } from '@nestjs/mongoose'
+import { payoutProviders } from './payout.provider';
+import { DatabaseModule } from 'src/databases/databases.module';
 
 @Module({
-    imports: [MongooseModule.forFeature([{
-        name: 'Payout',
-        schema: PayoutSchema
-    }])],
+    imports: [DatabaseModule],
     controllers: [PayoutController],
-    providers: [PayoutService],
+    providers: [
+        ...payoutProviders,
+        PayoutService
+    ],
     exports: [PayoutService],
 })
 
