@@ -29,12 +29,26 @@ describe('PayoutController', () => {
     controller = module.get<PayoutController>(PayoutController);
   });
 
+  afterEach(async () => {
+    const collections = mongoConnection.collections;
+    for (const key in collections) {
+      const collection = collections[key];
+      await collection.deleteMany({});
+    }
+  });
+
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
+  afterAll(async () => {
+    await mongoConnection.dropDatabase();
+    await mongoConnection.close();
+    await mongod.stop();
+  });
+
   describe("postPayout", () => {
-    it("should return the saved object", async () => {
+    it("should return one saved payout", async () => {
       const itemsSold: CreateSoldItemDto[] = [
         ItemDTOStub(100)
       ]
@@ -42,11 +56,54 @@ describe('PayoutController', () => {
       expect(createdPayouts.length).toBe(1);
       expect(createdPayouts[0].amount).toBe(100);
     });
-    /*it("should return ArticleAlreadyExists (Bad Request - 400) exception", async () => {
-      await (new articleModel(ArticleDTOStub()).save());
-      await expect(appController.postArticle(ArticleDTOStub()))
-        .rejects
-        .toThrow(ArticleAlreadyExists);
-    });*/
+
+    it("should return the one saved payout with more than 1 millon as an amount", async () => {
+      const itemsSold: CreateSoldItemDto[] = [
+        ItemDTOStub(1200000)
+      ]
+      const createdPayouts = await controller.createPayout(itemsSold);
+      expect(createdPayouts.length).toBe(1);
+      expect(createdPayouts[0].amount).toBe(1200000);
+    });
+
+    it("should return the two saved payout splitted as having more than 1 millon as an amount sum", async () => {
+      const itemsSold: CreateSoldItemDto[] = [
+        ItemDTOStub(1200000),
+        ItemDTOStub(500)
+      ]
+      const createdPayouts = await controller.createPayout(itemsSold);
+      expect(createdPayouts.length).toBe(2);
+      expect(createdPayouts[0].amount).toBe(1000000);
+      expect(createdPayouts[1].amount).toBe(200500);
+    });
+
+    it("should return the two previously saved payouts", async () => {
+      const itemsSold: CreateSoldItemDto[] = [
+        ItemDTOStub(1200000),
+        ItemDTOStub(500)
+      ]
+      await controller.createPayout(itemsSold);
+      const payouts = await controller.getPayouts();
+      expect(payouts.length).toBe(2);
+    });
+
+    it("should return a specific payout previously saved", async () => {
+      const itemsSold: CreateSoldItemDto[] = [
+        ItemDTOStub(1200000),
+      ]
+      const payouts = await controller.createPayout(itemsSold);
+      let payout = await controller.getPayout(payouts[0].id.toString());
+      expect(payout).not.toBeNull();
+    });
+
+    it("should delete a specific payout previously saved", async () => {
+      const itemsSold: CreateSoldItemDto[] = [
+        ItemDTOStub(1200000),
+      ]
+      const createdPayouts = await controller.createPayout(itemsSold);
+      await controller.deletePayout(createdPayouts[0].id.toString());
+      const payouts = await controller.getPayouts();
+      expect(payouts.length).toBe(0);
+    });
   });
 });
