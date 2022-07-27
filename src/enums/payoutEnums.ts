@@ -1,0 +1,1 @@
+export const AMOUNT_LIMIT = 1000000;
