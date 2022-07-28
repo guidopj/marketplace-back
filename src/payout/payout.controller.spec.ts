@@ -77,6 +77,20 @@ describe('PayoutController', () => {
       expect(createdPayouts[1].amount).toBe(200500);
     });
 
+    it("should return the 13 saved payout splitted as having more than 1 millon as an amount sum", async () => {
+      const itemsSold: CreateSoldItemDto[] = [
+        ItemDTOStub(12000000),
+        ItemDTOStub(200500),
+        ItemDTOStub(500)
+      ]
+
+      const createdPayouts = await controller.createPayout(itemsSold);
+
+      expect(createdPayouts.length).toBe(13);
+      expect(createdPayouts[0].amount).toBe(1000000);
+      expect(createdPayouts[12].amount).toBe(201000);
+    });
+
     it("should return the two previously saved payouts", async () => {
       const itemsSold: CreateSoldItemDto[] = [
         ItemDTOStub(1200000),

@@ -37,30 +37,39 @@ export class PayoutService {
         return await payout.save();
     }
 
+    async splitPayouts(item: CreateSoldItemDto, currentAmount: number){
+        const splittedPayouts = [];
+        while(currentAmount > AMOUNT_LIMIT){
+            let payout = await this.savePayout(item, AMOUNT_LIMIT);
+            currentAmount -= AMOUNT_LIMIT;
+            splittedPayouts.push(payout);
+        }
+        return {splittedPayouts, currentAmount};
+    }
+
     async createPayout(soldItems: CreateSoldItemDto[]): Promise<Payout[]> {
-        const result: Payout[] = [];
+        let result: Payout[] = [];
         const hasSingleItem = soldItems.length === 1;
+        let payout = null;
 
         let totalAmount = soldItems.reduce((acc, item) => {
             return acc + item.priceAmount;
         }, 0);
 
-        const payoutsAmount = hasSingleItem ? soldItems.length : Math.ceil(totalAmount / AMOUNT_LIMIT);
         let currentAmount = totalAmount;
-
         if(hasSingleItem){
-            const payout = await this.savePayout(soldItems[0], soldItems[0].priceAmount);
+            payout = await this.savePayout(soldItems[0], soldItems[0].priceAmount);
             result.push(payout);
             return result;
         } else {
-            for(let payoutIdx = 0; payoutIdx < payoutsAmount; payoutIdx++){
-                let payout = null;
-                if(currentAmount < AMOUNT_LIMIT){
-                    payout = await this.savePayout(soldItems[payoutIdx], currentAmount)
-                } else {
-                    payout = await this.savePayout(soldItems[payoutIdx], AMOUNT_LIMIT)
-                    currentAmount -= AMOUNT_LIMIT;
-                }
+            if(currentAmount > AMOUNT_LIMIT){
+                let payouts = await this.splitPayouts(soldItems[0], currentAmount);
+                result = result.concat(payouts.splittedPayouts);
+                currentAmount = payouts.currentAmount
+            }
+            
+            if(currentAmount > 0){
+                payout = await this.savePayout(soldItems[0], currentAmount)
                 result.push(payout);
             }
             return result;

@@ -5,4 +5,4 @@ export interface Payout {
     currency: String;
 }
 
-export const PayoutName = "name";
+export const PayoutName = "Payout";
