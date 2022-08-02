@@ -4,7 +4,7 @@ import { Table, Column, Model, ForeignKey, PrimaryKey } from 'sequelize-typescri
 import { Item } from './item.entity'
 import { USD, EUR, GBP } from '../enums/currenciesEnums'
 
-@Table
+@Table({initialAutoIncrement: '1'})
 export class Payout extends Model {
     @PrimaryKey
     @Column(DataTypes.INTEGER)
@@ -21,5 +21,7 @@ export class Payout extends Model {
 
     @ForeignKey(() => Item)
     @Column
-    itemId: number
+    itemId: number;
 }
+
+export const PayoutEntity = Payout

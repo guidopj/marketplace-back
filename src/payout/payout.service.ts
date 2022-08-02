@@ -3,7 +3,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { CreateSoldItemDto } from '../item/dto/item.dto';
 import { CreatePayoutDto } from './dto/payout.dto';
 import { AMOUNT_LIMIT } from '../enums/payoutEnums';
-import { PAYOUT_REPOSITORY } from 'src/enums/payoutEnums';
+import { PAYOUT_REPOSITORY } from '../enums/payoutEnums';
 import { Payout } from 'src/entities/payout.entity';
 
 @Injectable()

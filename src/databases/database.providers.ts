@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Payout } from '../entities/payout.entity';
 import { Item } from '../entities/item.entity';
-import { SEQUELIZE_PROVIDER } from 'src/enums/databaseEnums';
+import { SEQUELIZE_PROVIDER } from '../enums/databaseEnums';
 
 export const databaseProviders = [
   {

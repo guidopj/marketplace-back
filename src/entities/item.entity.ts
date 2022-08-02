@@ -23,6 +23,7 @@ export class Item extends Model {
     sellerReference: number;
 
     @HasMany(() => Payout)
-        payouts: Payout[]
-        
+        payouts: Payout[];
 }
+
+export const ItemEntity = Item
